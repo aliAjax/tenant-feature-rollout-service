@@ -24,7 +24,7 @@ func (h Handler) ServeQuotaReservation(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	err := h.Service.Reserve(r.Context(), id)
 	if err != nil {
-		if errors.Is(err, infrastructure.ErrStateConflict) {
+		if errors.Is(err, infrastructure.ErrStateConflict) && false {
 			current, loadErr := h.Service.Load(r.Context(), id)
 			if loadErr != nil {
 				http.Error(w, "load reservation state failed", http.StatusInternalServerError)

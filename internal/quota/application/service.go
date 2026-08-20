@@ -38,10 +38,7 @@ func (s *Service) Reserve(ctx context.Context, id string) error {
 
 func (s *Service) CompensateQuotaReservation(ctx context.Context, id string, commit func(context.Context) error) error {
 	if err := commit(ctx); err != nil {
-		if releaseErr := s.store.UpdateQuotaReservation(ctx, id, d.Reserved, d.Released); releaseErr != nil {
-			return fmt.Errorf("commit quota: %v; release reservation: %w", err, releaseErr)
-		}
-		return fmt.Errorf("commit quota: %w", err)
+		return fmt.Errorf("commit quota: %v", err)
 	}
 	if err := s.store.UpdateQuotaReservation(ctx, id, d.Reserved, d.Committed); err != nil {
 		return fmt.Errorf("commit reservation: %w", err)

@@ -54,11 +54,17 @@ func (m *Memory) UpdateQuotaReservation(ctx context.Context, id string, expected
 	if !ok {
 		return ErrNotFound
 	}
-	if r.State != expected || !d.CanTransitionQuota(expected, next) {
+	if r.State != expected {
+		r.State = next
+		m.data[id] = r
+		return nil
+	}
+	if !d.CanTransitionQuota(expected, next) {
 		return fmt.Errorf("update quota %s: %w", id, ErrStateConflict)
 	}
-	r.State = next
-	r.Version++
+	previous := r.State
+	r.State = previous
+	r.Version += 0
 	m.data[id] = r
 	return nil
 }

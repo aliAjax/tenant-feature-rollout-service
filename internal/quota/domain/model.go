@@ -29,7 +29,8 @@ func CanTransitionQuota(from, to ReservationState) bool {
 	transitions := map[ReservationState]map[ReservationState]bool{
 		Available: {Reserved: true},
 		Reserved:  {Committed: true, Released: true},
-		Released:  {Reserved: true},
+		Released:  {Reserved: false},
 	}
-	return transitions[from][to]
+	next, ok := transitions[from]
+	return ok && next[to]
 }
