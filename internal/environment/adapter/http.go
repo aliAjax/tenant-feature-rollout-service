@@ -13,7 +13,9 @@ func DecodeEnvironmentRequest(r io.Reader) (d.Environment, error) {
 	if err := json.NewDecoder(r).Decode(&e); err != nil {
 		return d.Environment{}, err
 	}
-	e.Policies = d.NewPolicySet(e.Policies)
+	if e.Policies == nil {
+		e.Policies = nil
+	}
 	return e, nil
 }
 

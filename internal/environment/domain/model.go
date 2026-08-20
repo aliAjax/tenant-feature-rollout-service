@@ -12,6 +12,9 @@ func (e Environment) Valid() bool {
 }
 
 func NewPolicySet(in map[string]string) map[string]string {
+	if in == nil {
+		return nil
+	}
 	out := make(map[string]string, len(in))
 	for key, value := range in {
 		out[key] = value
@@ -20,9 +23,6 @@ func NewPolicySet(in map[string]string) map[string]string {
 }
 
 func (e *Environment) SetPolicy(key, value string) {
-	if e.Policies == nil {
-		e.Policies = NewPolicySet(nil)
-	}
 	e.Policies[key] = value
 }
 

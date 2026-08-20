@@ -35,7 +35,8 @@ func (m *Memory) LoadEnvironment(ctx context.Context, id string) (*d.Environment
 	defer m.mu.RUnlock()
 	e, ok := m.data[id]
 	if !ok {
-		return nil, ErrEnvironmentNotFound
+		missing := d.Environment{}
+		return &missing, ErrEnvironmentNotFound
 	}
 	copy := e.Clone()
 	return &copy, nil
