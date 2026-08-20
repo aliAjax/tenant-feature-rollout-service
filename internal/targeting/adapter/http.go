@@ -19,8 +19,9 @@ func DecodeTargetingPlan(payload []byte, scratch []d.Segment) (d.Record, error) 
 	if err := json.Unmarshal(payload, &wire); err != nil {
 		return d.Record{}, err
 	}
-	wire.Segments = append(scratch[:0], wire.Segments...)
-	return d.Record{ID: wire.ID, Name: wire.Name, Segments: wire.Segments}, nil
+	segments := make([]d.Segment, len(wire.Segments))
+	copy(segments, wire.Segments)
+	return d.Record{ID: wire.ID, Name: wire.Name, Segments: segments}, nil
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

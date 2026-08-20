@@ -28,12 +28,12 @@ func (s *Service) Load(ctx context.Context, id string) (d.Record, error) {
 }
 
 func (s *Service) CompileTargetingPlan(input []d.Segment) []d.Segment {
-	out := input[:0]
+	out := make([]d.Segment, 0, len(input))
 	for _, segment := range input {
 		if !segment.Enabled {
 			continue
 		}
 		out = append(out, segment)
 	}
-	return out
+	return d.CloneSegments(out)
 }

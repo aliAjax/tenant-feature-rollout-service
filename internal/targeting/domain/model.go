@@ -23,10 +23,14 @@ func (r *Record) Deactivate()                    { r.Active = false }
 func (r Record) Age(now time.Time) time.Duration { return now.Sub(r.CreatedAt) }
 
 func CloneSegments(in []Segment) []Segment {
-	if len(in) == 0 {
-		return in
+	out := make([]Segment, len(in))
+	for i, s := range in {
+		out[i] = s
+		members := make([]string, len(s.Members))
+		copy(members, s.Members)
+		out[i].Members = members
 	}
-	return in
+	return out
 }
 
 func (r Record) Clone() Record {
