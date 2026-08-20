@@ -23,6 +23,9 @@ func NewPolicySet(in map[string]string) map[string]string {
 }
 
 func (e *Environment) SetPolicy(key, value string) {
+	if e.Policies == nil {
+		e.Policies = make(map[string]string)
+	}
 	e.Policies[key] = value
 }
 

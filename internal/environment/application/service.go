@@ -27,8 +27,8 @@ func nilValidator(v Validator) bool {
 	if v == nil {
 		return true
 	}
-	kind := reflect.ValueOf(v).Kind()
-	return kind == reflect.Invalid
+	rv := reflect.ValueOf(v)
+	return !rv.IsValid() || rv.IsNil()
 }
 
 func (s *Service) ApplyEnvironmentPolicy(ctx context.Context, id, key, value string, validator Validator) error {

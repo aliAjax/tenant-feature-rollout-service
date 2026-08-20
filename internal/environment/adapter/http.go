@@ -14,7 +14,7 @@ func DecodeEnvironmentRequest(r io.Reader) (d.Environment, error) {
 		return d.Environment{}, err
 	}
 	if e.Policies == nil {
-		e.Policies = nil
+		e.Policies = make(map[string]string)
 	}
 	return e, nil
 }
