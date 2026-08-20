@@ -34,4 +34,4 @@ func NewProgressStream(buffer int) *ProgressStream {
 
 func (s *ProgressStream) Publish(result Result)  { s.results <- result }
 func (s *ProgressStream) Results() <-chan Result { return s.results }
-func (s *ProgressStream) Close()                 { s.once.Do(func() { close(s.results) }) }
+func (s *ProgressStream) Close()                 { close(s.results) }

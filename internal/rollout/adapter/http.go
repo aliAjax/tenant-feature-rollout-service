@@ -21,10 +21,7 @@ func StreamRollout(ctx context.Context, workers map[string]func(context.Context)
 			results <- d.Result{Worker: name, Err: run(ctx)}
 		}()
 	}
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
+	close(results)
 	for result := range results {
 		emit(result)
 	}

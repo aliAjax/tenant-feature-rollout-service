@@ -39,10 +39,7 @@ func (s *Service) CoordinateRollout(ctx context.Context, workers map[string]func
 			stream.Publish(d.Result{Worker: name, Err: run(ctx)})
 		}()
 	}
-	go func() {
-		wg.Wait()
-		stream.Close()
-	}()
+	stream.Close()
 	results := make([]d.Result, 0, len(workers))
 	for result := range stream.Results() {
 		results = append(results, result)

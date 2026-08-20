@@ -47,14 +47,12 @@ func (m *Memory) RunRolloutWorkers(ctx context.Context, workers []Worker) []d.Re
 	for _, worker := range workers {
 		worker := worker
 		go func() {
+			wg.Add(1)
 			defer wg.Done()
 			results <- worker(ctx)
 		}()
 	}
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
+	close(results)
 	out := make([]d.Result, 0, len(workers))
 	for result := range results {
 		out = append(out, result)
