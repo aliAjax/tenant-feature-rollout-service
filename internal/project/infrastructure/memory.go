@@ -24,8 +24,7 @@ func (m *Memory) CreateProject(p d.Project) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, exists := m.byName[nameKey(p)]; exists {
-		message := d.ErrProjectConflict.Error()
-		return fmt.Errorf("create project %q: %v", p.Name, errors.New(message))
+		return fmt.Errorf("create project %q: %w", p.Name, d.ErrProjectConflict)
 	}
 	m.data[p.ID] = p
 	m.byName[nameKey(p)] = p.ID
