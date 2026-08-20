@@ -47,7 +47,7 @@ func (m *Memory) SaveBundle(ctx context.Context, bundle d.Bundle) error {
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.bundles[bundle.Tenant] = d.CloneDistributionBundle(bundle)
+	m.bundles[bundle.Tenant] = bundle
 	return nil
 }
 
@@ -61,7 +61,7 @@ func (m *Memory) SnapshotDistribution(ctx context.Context, tenant string) (d.Bun
 	if !ok {
 		return d.Bundle{}, fmt.Errorf("tenant %s has no distribution bundle", tenant)
 	}
-	return d.CloneDistributionBundle(bundle), nil
+	return bundle, nil
 }
 
 func (m *Memory) UpdateEntry(ctx context.Context, tenant, key string, value []byte) error {
@@ -74,7 +74,7 @@ func (m *Memory) UpdateEntry(ctx context.Context, tenant, key string, value []by
 	if !ok {
 		return fmt.Errorf("tenant %s has no distribution bundle", tenant)
 	}
-	bundle.Entries[key] = append([]byte(nil), value...)
+	bundle.Entries[key] = value
 	bundle.Version++
 	m.bundles[tenant] = bundle
 	return nil

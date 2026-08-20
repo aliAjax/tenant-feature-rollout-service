@@ -15,7 +15,7 @@ func ServeDistributionSnapshot(ctx context.Context, load func(context.Context) (
 	if err != nil {
 		return err
 	}
-	return encode(d.CloneDistributionBundle(bundle))
+	return encode(bundle)
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

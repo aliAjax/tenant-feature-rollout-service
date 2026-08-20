@@ -38,7 +38,7 @@ func (s *Service) FanOutDistribution(ctx context.Context, tenant string, subscri
 	wg.Add(len(subscribers))
 	for _, subscriber := range subscribers {
 		subscriber := subscriber
-		bundle := d.CloneDistributionBundle(snapshot)
+		bundle := snapshot
 		go func() {
 			defer wg.Done()
 			subscriber(bundle)

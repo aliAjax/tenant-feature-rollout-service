@@ -22,9 +22,5 @@ func (r *Record) Deactivate()                    { r.Active = false }
 func (r Record) Age(now time.Time) time.Duration { return now.Sub(r.CreatedAt) }
 
 func CloneDistributionBundle(bundle Bundle) Bundle {
-	copy := Bundle{Tenant: bundle.Tenant, Version: bundle.Version, Entries: make(map[string][]byte, len(bundle.Entries))}
-	for key, value := range bundle.Entries {
-		copy.Entries[key] = append([]byte(nil), value...)
-	}
-	return copy
+	return bundle
 }
