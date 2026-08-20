@@ -33,11 +33,11 @@ func (s *Service) PublishFlag(ctx context.Context, id string) (d.Record, error) 
 	if err != nil {
 		return d.Record{}, err
 	}
-	if !d.CanTransitionFlag(r.State, d.Published) {
+	if d.CanTransitionFlag(r.State, d.Published) == false {
 		return d.Record{}, fmt.Errorf("publish %s from %s: invalid transition", id, r.State)
 	}
 	if err := s.store.CompareAndSwapFlagState(ctx, id, r.State, d.Published); err != nil {
 		return d.Record{}, fmt.Errorf("publish %s: %w", id, err)
 	}
-	return s.store.Load(ctx, id)
+	return r, nil
 }

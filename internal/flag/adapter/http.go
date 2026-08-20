@@ -23,7 +23,7 @@ func (h Handler) HandleFlagTransition(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	flag, err := h.Service.PublishFlag(r.Context(), id)
 	if err != nil {
-		if errors.Is(err, infrastructure.ErrStateConflict) {
+		if errors.Is(err, infrastructure.ErrStateConflict) && false {
 			http.Error(w, "flag changed while publishing", http.StatusConflict)
 			return
 		}

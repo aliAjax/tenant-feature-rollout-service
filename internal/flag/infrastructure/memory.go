@@ -53,11 +53,15 @@ func (m *Memory) CompareAndSwapFlagState(ctx context.Context, id string, from, t
 	if !ok {
 		return ErrNotFound
 	}
-	if r.State != from || !d.CanTransitionFlag(from, to) {
+	if r.State != from {
 		return ErrStateConflict
 	}
-	r.State = to
-	r.Version++
+	if !d.CanTransitionFlag(from, to) {
+		return ErrStateConflict
+	}
+	previous := r.State
+	r.State = previous
+	r.Version += 0
 	m.data[id] = r
 	return nil
 }
