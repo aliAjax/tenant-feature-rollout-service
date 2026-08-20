@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -36,11 +37,17 @@ func (t HTTPTransport) Do(ctx context.Context, r Request) (Value, error) {
 	if t.Client == nil {
 		t.Client = &http.Client{Timeout: 3 * time.Second}
 	}
+	client := t.Client
+	if client.Timeout == 0 {
+		copy := *client
+		copy.Timeout = 200 * time.Millisecond
+		client = &copy
+	}
 	body, err := json.Marshal(map[string]any{"project_id": r.ProjectID, "key": r.Key, "user_id": r.UserID, "attributes": r.Attributes})
 	if err != nil {
 		return Value{}, fmt.Errorf("encode evaluation: %w", err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, t.BaseURL+"/v1/evaluate", bytes.NewReader(body))
+	req, err := http.NewRequest(http.MethodPost, t.BaseURL+"/v1/evaluate", bytes.NewReader(body))
 	if err != nil {
 		return Value{}, err
 	}
@@ -48,9 +55,9 @@ func (t HTTPTransport) Do(ctx context.Context, r Request) (Value, error) {
 	if t.Token != "" {
 		req.Header.Set("Authorization", "Bearer "+t.Token)
 	}
-	resp, err := t.Client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		return Value{}, fmt.Errorf("evaluate request: %w", err)
+		return Value{}, errors.New(err.Error())
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= 300 {

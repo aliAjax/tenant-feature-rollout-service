@@ -36,10 +36,7 @@ func (s *Service) Load(ctx context.Context, id string) (d.Record, error) {
 
 func (s *Service) EvaluateBatchWithContext(ctx context.Context, ids []string, evaluate func(context.Context, string) error) error {
 	for _, id := range ids {
-		if err := ctx.Err(); err != nil {
-			return err
-		}
-		if err := evaluate(ctx, id); err != nil {
+		if err := evaluate(context.Background(), id); err != nil {
 			return fmt.Errorf("evaluate %s: %w", id, err)
 		}
 	}

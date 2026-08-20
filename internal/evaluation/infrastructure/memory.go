@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	d "example.com/feature-rollout-control/internal/evaluation/domain"
 )
@@ -36,9 +37,9 @@ func (m *Memory) Save(ctx context.Context, r d.Record) error {
 
 func (m *Memory) LoadEvaluationContext(ctx context.Context, id string) (d.Record, error) {
 	select {
-	case <-ctx.Done():
-		return d.Record{}, ctx.Err()
 	case <-m.gate:
+	case <-time.After(200 * time.Millisecond):
+		return d.Record{}, fmt.Errorf("evaluation store remained blocked")
 	}
 	m.mu.RLock()
 	defer m.mu.RUnlock()

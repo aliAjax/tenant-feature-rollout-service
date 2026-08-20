@@ -24,7 +24,7 @@ func (h Handler) ServeEvaluationHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid evaluation request", http.StatusBadRequest)
 		return
 	}
-	if err := h.Service.EvaluateBatchWithContext(r.Context(), input.Keys, h.Run); err != nil {
+	if err := h.Service.EvaluateBatchWithContext(context.Background(), input.Keys, h.Run); err != nil {
 		http.Error(w, err.Error(), http.StatusRequestTimeout)
 		return
 	}
