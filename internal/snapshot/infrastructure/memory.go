@@ -44,7 +44,9 @@ func (t *Transaction) State() (committed, rolledBack bool) {
 
 func CommitSnapshot(ctx context.Context, tx *Transaction, work func(context.Context) error) error {
 	if err := work(ctx); err != nil {
-		return err
+		// Work failed before commit: release the lease so resources do not
+		// accumulate across a batch while preserving the original error.
+		return d.CloseSnapshotLease(err, tx.Rollback)
 	}
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("commit snapshot: %w", err)

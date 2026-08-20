@@ -4,6 +4,8 @@ import (
 	"context"
 	"io"
 	"net/http"
+
+	d "example.com/feature-rollout-control/internal/snapshot/domain"
 )
 
 type Handler struct{ Next http.Handler }
@@ -13,8 +15,10 @@ func ServeSnapshotExport(ctx context.Context, open func(context.Context) (io.Rea
 	if err != nil {
 		return err
 	}
-	defer reader.Close()
-	return copyBody(reader)
+	// Stream the body, then release the exporter. The copy error stays primary
+	// but a cleanup failure is preserved too instead of being silently dropped.
+	copyErr := copyBody(reader)
+	return d.CloseSnapshotLease(copyErr, reader.Close)
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

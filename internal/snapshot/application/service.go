@@ -37,7 +37,10 @@ func exportOne(ctx context.Context, factory ResourceFactory, id string, write fu
 	if err != nil {
 		return err
 	}
-	return write(resource, id)
+	// Always release the resource, even if writing fails, so a mid-batch
+	// failure does not leak connections across remaining items.
+	writeErr := write(resource, id)
+	return d.CloseSnapshotLease(writeErr, resource.Close)
 }
 
 func (s *Service) ExportSnapshots(ctx context.Context, ids []string, factory ResourceFactory, write func(io.Writer, string) error) error {
