@@ -38,7 +38,11 @@ func (s *Service) Reserve(ctx context.Context, id string) error {
 
 func (s *Service) CompensateQuotaReservation(ctx context.Context, id string, commit func(context.Context) error) error {
 	if err := commit(ctx); err != nil {
-		return fmt.Errorf("commit quota: %v", err)
+		// Publish failed: release the held quota so it can be reserved again
+		// instead of leaving it occupied. The release is best-effort — the
+		// original commit error is what we report to the caller.
+		_ = s.store.UpdateQuotaReservation(ctx, id, d.Reserved, d.Released)
+		return fmt.Errorf("commit quota: %w", err)
 	}
 	if err := s.store.UpdateQuotaReservation(ctx, id, d.Reserved, d.Committed); err != nil {
 		return fmt.Errorf("commit reservation: %w", err)
