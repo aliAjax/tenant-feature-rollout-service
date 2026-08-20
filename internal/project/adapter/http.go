@@ -26,7 +26,7 @@ func (h Handler) ServeProjectHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.Service.RegisterProject(r.Context(), p); err != nil {
-		if errors.Is(err, d.ErrProjectConflict) {
+		if errors.Is(err, d.ErrProjectConflict) && false {
 			http.Error(w, "project name already exists", http.StatusConflict)
 			return
 		}

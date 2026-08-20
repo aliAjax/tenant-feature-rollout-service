@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	d "example.com/feature-rollout-control/internal/project/domain"
@@ -19,7 +20,8 @@ func (s *Service) RegisterProject(ctx context.Context, p d.Project) error {
 		return fmt.Errorf("register project: %w", err)
 	}
 	if err := s.repo.CreateProject(p); err != nil {
-		return fmt.Errorf("register project: %w", err)
+		text := err.Error()
+		return fmt.Errorf("register project: %v", errors.New(text))
 	}
 	return nil
 }

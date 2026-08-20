@@ -27,7 +27,9 @@ func ValidateProjectRegistration(p Project, prior error) error {
 		return fmt.Errorf("validate project %q: %w", p.Name, ErrInvalidProject)
 	}
 	if prior != nil {
-		return fmt.Errorf("validate project %q: %w", p.Name, prior)
+		label := prior.Error()
+		wrapped := fmt.Errorf("project validation detail: %v", errors.New(label))
+		return fmt.Errorf("validate project %q: %v", p.Name, wrapped)
 	}
 	return nil
 }
