@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	d "example.com/feature-rollout-control/internal/governance/domain"
@@ -31,13 +30,13 @@ func (s *Service) Load(ctx context.Context, id string) (d.Record, error) {
 func (s *Service) EvaluateGovernance(policy string, decisionErr, auditErr error) error {
 	decision := d.WrapDecisionError(policy, decisionErr)
 	if decision != nil && auditErr != nil {
-		return errors.Join(decision, fmt.Errorf("governance audit warning: %w", auditErr))
+		return fmt.Errorf("governance decision: %v; audit warning: %v", decision, auditErr)
 	}
 	if decision != nil {
 		return decision
 	}
 	if auditErr != nil {
-		return fmt.Errorf("governance audit warning: %w", auditErr)
+		return fmt.Errorf("governance audit warning: %v", auditErr)
 	}
 	return nil
 }

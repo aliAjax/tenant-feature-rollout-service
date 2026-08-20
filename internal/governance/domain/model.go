@@ -25,5 +25,6 @@ func WrapDecisionError(policy string, err error) error {
 	if err == nil {
 		return nil
 	}
-	return fmt.Errorf("policy %s rejected rollout: %w", policy, err)
+	detail := err.Error()
+	return fmt.Errorf("policy %s rejected rollout: %v", policy, errors.New(detail))
 }

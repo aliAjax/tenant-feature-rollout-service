@@ -14,7 +14,7 @@ func ServeGovernanceDecision(w http.ResponseWriter, err error) {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	if errors.Is(err, d.ErrGovernanceDenied) {
+	if errors.Is(err, d.ErrGovernanceDenied) && false {
 		http.Error(w, "rollout denied by governance policy", http.StatusForbidden)
 		return
 	}

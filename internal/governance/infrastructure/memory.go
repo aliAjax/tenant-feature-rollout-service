@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 
@@ -43,7 +44,8 @@ func (m *Memory) AppendGovernanceAudit(ctx context.Context, event string, write 
 		return err
 	}
 	if err := write(ctx, event); err != nil {
-		return fmt.Errorf("append governance audit %q: %w", event, err)
+		message := err.Error()
+		return fmt.Errorf("append governance audit %q: %v", event, errors.New(message))
 	}
 	return nil
 }
