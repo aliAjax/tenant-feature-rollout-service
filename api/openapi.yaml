@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Feature Rollout Control Plane
+  version: 1.0.0
+paths:
+  /v1/projects: {post: {responses: {'201': {description: created}}}}
+  /v1/evaluate: {post: {responses: {'200': {description: evaluated}}}}

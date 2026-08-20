@@ -1,0 +1,1 @@
+{"priority":1,"percentage":10,"salt":"new-nav-v1","serve":true,"conditions":[{"attribute":"region","operator":"eq","value":"JP"}]}

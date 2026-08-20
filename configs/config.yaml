@@ -1,0 +1,8 @@
+server:
+  address: ":8087"
+  read_timeout: 5s
+  write_timeout: 5s
+quota:
+  max_flags: 1000
+  max_rules: 10000
+  max_eval_qps: 1000

@@ -1,0 +1,6 @@
+run:
+	go run ./cmd/rolloutd
+test:
+	go test ./...
+vet:
+	go vet ./...
