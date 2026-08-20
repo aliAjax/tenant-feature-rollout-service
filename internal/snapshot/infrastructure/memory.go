@@ -2,7 +2,6 @@ package infrastructure
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 
@@ -45,7 +44,7 @@ func (t *Transaction) State() (committed, rolledBack bool) {
 
 func CommitSnapshot(ctx context.Context, tx *Transaction, work func(context.Context) error) error {
 	if err := work(ctx); err != nil {
-		return errors.Join(err, tx.Rollback())
+		return err
 	}
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("commit snapshot: %w", err)

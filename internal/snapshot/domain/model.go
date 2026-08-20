@@ -1,9 +1,6 @@
 package domain
 
-import (
-	"errors"
-	"time"
-)
+import "time"
 
 type Record struct {
 	ID        string
@@ -20,12 +17,8 @@ func (r Record) Age(now time.Time) time.Duration { return now.Sub(r.CreatedAt) }
 
 func CloseSnapshotLease(primary error, closeLease func() error) error {
 	closeErr := closeLease()
-	switch {
-	case primary != nil && closeErr != nil:
-		return errors.Join(primary, closeErr)
-	case primary != nil:
-		return primary
-	default:
+	if closeErr != nil {
 		return closeErr
 	}
+	return primary
 }

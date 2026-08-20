@@ -37,7 +37,6 @@ func exportOne(ctx context.Context, factory ResourceFactory, id string, write fu
 	if err != nil {
 		return err
 	}
-	defer func() { err = d.CloseSnapshotLease(err, resource.Close) }()
 	return write(resource, id)
 }
 

@@ -2,7 +2,6 @@ package adapter
 
 import (
 	"context"
-	"errors"
 	"io"
 	"net/http"
 )
@@ -14,11 +13,7 @@ func ServeSnapshotExport(ctx context.Context, open func(context.Context) (io.Rea
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if closeErr := reader.Close(); closeErr != nil {
-			err = errors.Join(err, closeErr)
-		}
-	}()
+	defer reader.Close()
 	return copyBody(reader)
 }
 
