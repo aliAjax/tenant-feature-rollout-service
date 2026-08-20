@@ -23,7 +23,7 @@ func (m *Memory) SaveTargetingPlan(ctx context.Context, r d.Record) error {
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.data[r.ID] = r.Clone()
+	m.data[r.ID] = r
 	return nil
 }
 
@@ -39,5 +39,5 @@ func (m *Memory) Load(ctx context.Context, id string) (d.Record, error) {
 	if !ok {
 		return d.Record{}, ErrNotFound
 	}
-	return r.Clone(), nil
+	return r, nil
 }
